@@ -7,6 +7,7 @@ export class AppService {
 
   async getFirstUserName(): Promise<string> {
     const user = await this.prisma.user.findFirst();
-    return user.email;
+
+    return user.name;
   }
 }
