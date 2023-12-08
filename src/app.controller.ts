@@ -1,7 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
+import { LoggerInterceptor } from 'src/logger.interceptor';
+import { AuthGuard } from 'src/auth.guard';
 
 @Controller()
+@UseGuards(new AuthGuard('controller'))
+@UseInterceptors(new LoggerInterceptor('controller'))
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
