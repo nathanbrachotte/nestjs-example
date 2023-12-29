@@ -7,24 +7,25 @@ import {
 import { Observable, tap } from 'rxjs';
 
 export class LoggerInterceptor implements NestInterceptor {
-  interceptorlevel: string;
+  private readonly logger = new Logger(LoggerInterceptor.name);
+  private instanceLevel: string;
 
   constructor(private level: string) {
-    this.interceptorlevel = level;
+    this.instanceLevel = level;
   }
 
   intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
     const date = new Date();
-    Logger.debug(
-      `LoggerInterceptor ${this.interceptorlevel} -- Request count started.`,
+    this.logger.debug(
+      `LoggerInterceptor ${this.instanceLevel} -- Request count started.`,
     );
 
     return handler.handle().pipe(
       tap(() => {
-        const finishedDate = new Date();
-        const totalTime = finishedDate.getTime() - date.getTime();
-        Logger.debug(
-          `LoggerInterceptor ${this.interceptorlevel} -- Request completed in: ${totalTime} ms`,
+        const totalTime = new Date().getTime() - date.getTime();
+
+        this.logger.debug(
+          `LoggerInterceptor ${this.instanceLevel} -- Request completed in: ${totalTime} ms`,
         );
       }),
     );

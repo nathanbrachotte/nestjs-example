@@ -9,17 +9,18 @@ import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  guardLevel: string;
+  private readonly logger = new Logger(AuthGuard.name);
+  private instanceLevel: string;
 
   constructor(private level: string) {
-    this.guardLevel = level;
+    this.instanceLevel = level;
   }
 
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>(); // Need to infer Request as otherwise its type is `any` :(
-    Logger.debug(`Guard ${this.guardLevel} -- Verifying cookie`);
+    this.logger.debug(`Guard ${this.instanceLevel} -- Verifying cookie`);
 
     const cookie = request.headers.cookie;
 

@@ -3,11 +3,36 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggerMiddleware } from 'src/logger.middleware';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { AuthGuard } from 'src/auth.guard';
+import { LoggerInterceptor } from 'src/logger.interceptor';
+import { CustomValidationPipe } from 'src/customValidation.pipe';
 
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    AppService,
+    PrismaService,
+    {
+      provide: APP_GUARD,
+      useFactory: () => {
+        return new AuthGuard('app module');
+      },
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: () => {
+        return new LoggerInterceptor('app module');
+      },
+    },
+    {
+      provide: APP_PIPE,
+      useFactory: () => {
+        return new CustomValidationPipe('app module');
+      },
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

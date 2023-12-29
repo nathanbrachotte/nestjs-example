@@ -1,14 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { LoggerInterceptor } from 'src/logger.interceptor';
 import { AuthGuard } from 'src/auth.guard';
+import { LoggerInterceptor } from 'src/logger.interceptor';
 import { CustomValidationPipe } from 'src/customValidation.pipe';
+import { LogAllExceptionsFilter } from 'src/logAllExceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // app.useGlobalInterceptors(new LoggerInterceptor('main'));
+  //? Is this the same as inject in AppModule? Then probably just do it there?
   app.useGlobalGuards(new AuthGuard('main'));
-  // app.useGlobalPipes(new CustomValidationPipe('main'));
-  await app.listen(3000);
+  app.useGlobalInterceptors(new LoggerInterceptor('main'));
+  app.useGlobalPipes(new CustomValidationPipe('main'));
+  app.useGlobalFilters(new LogAllExceptionsFilter('main'));
+
+  await app.listen(3001);
 }
 bootstrap();

@@ -1,8 +1,8 @@
-import { IsInt, Min, Max } from 'class-validator';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 
 export class OgQueryDto {
-  @IsInt()
-  @Min(0)
-  @Max(10)
-  amount: number;
+  @IsString()
+  @MinLength(2)
+  @MaxLength(10)
+  name: string;
 }
