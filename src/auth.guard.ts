@@ -20,6 +20,7 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>(); // Need to infer Request as otherwise its type is `any` :(
+
     this.logger.debug(`Guard ${this.instanceLevel} -- Verifying cookie`);
 
     const cookie = request.headers.cookie;

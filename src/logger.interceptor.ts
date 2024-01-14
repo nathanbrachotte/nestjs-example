@@ -4,7 +4,7 @@ import {
   Logger,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 export class LoggerInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LoggerInterceptor.name);
@@ -14,7 +14,7 @@ export class LoggerInterceptor implements NestInterceptor {
     this.instanceLevel = level;
   }
 
-  intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, handler: CallHandler) {
     const date = new Date();
     this.logger.debug(
       `LoggerInterceptor ${this.instanceLevel} -- Request count started.`,

@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Query,
+  UseFilters,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -11,25 +12,30 @@ import { LoggerInterceptor } from 'src/logger.interceptor';
 import { AuthGuard } from 'src/auth.guard';
 import { OgQueryDto } from 'src/ogQuery.dto';
 import { CustomValidationPipe } from 'src/customValidation.pipe';
+import {
+  DeprecatedEndpointException,
+  DeprecatedEndpointFilter,
+} from 'src/deprecatedEndpoint.filter';
 
 @Controller()
 @UseGuards(new AuthGuard('controller'))
 @UseInterceptors(new LoggerInterceptor('controller'))
 @UsePipes(new CustomValidationPipe('controller'))
+@UseFilters(new DeprecatedEndpointFilter('controller'))
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @UseInterceptors(new LoggerInterceptor('method'))
-  @UseGuards(new AuthGuard('method'))
+  @UseInterceptors(new LoggerInterceptor('route'))
+  @UseGuards(new AuthGuard('route'))
+  @UseFilters(new DeprecatedEndpointFilter('route'))
   @Get('/og')
-  async getFirstUsersNames(
-    @Query('', new CustomValidationPipe('method')) query: OgQueryDto,
+  async getOGByName(
+    @Query(new CustomValidationPipe('route')) query: OgQueryDto,
   ): Promise<string> {
-    console.log({ query });
-
-    // To trigger the filter
-    // throw new Error('kaboom');
-
-    return await this.appService.getFirstUserName();
+    throw new DeprecatedEndpointException(
+      'This endpoint was removed because we all know John Wick is the real OG',
+      '/john-wick',
+    );
+    return query.name;
   }
 }

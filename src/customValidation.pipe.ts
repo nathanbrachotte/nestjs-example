@@ -37,7 +37,7 @@ export class CustomValidationPipe implements PipeTransform<any> {
   }
 
   private toValidate(metatype: Type<any> | undefined): boolean {
-    const types: any[] = [String, Boolean, Number, Array, Object];
+    const types: any = [String, Boolean, Number, Array, Object];
     return !types.includes(metatype);
   }
 }

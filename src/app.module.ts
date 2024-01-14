@@ -3,10 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggerMiddleware } from 'src/logger.middleware';
-import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AuthGuard } from 'src/auth.guard';
 import { LoggerInterceptor } from 'src/logger.interceptor';
 import { CustomValidationPipe } from 'src/customValidation.pipe';
+import { DeprecatedEndpointFilter } from 'src/deprecatedEndpoint.filter';
 
 @Module({
   imports: [],
@@ -30,6 +31,12 @@ import { CustomValidationPipe } from 'src/customValidation.pipe';
       provide: APP_PIPE,
       useFactory: () => {
         return new CustomValidationPipe('app module');
+      },
+    },
+    {
+      provide: APP_FILTER,
+      useFactory: () => {
+        return new DeprecatedEndpointFilter('app module');
       },
     },
   ],

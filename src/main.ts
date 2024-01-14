@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { AuthGuard } from 'src/auth.guard';
 import { LoggerInterceptor } from 'src/logger.interceptor';
 import { CustomValidationPipe } from 'src/customValidation.pipe';
-import { LogAllExceptionsFilter } from 'src/logAllExceptions.filter';
+import { DeprecatedEndpointFilter } from 'src/deprecatedEndpoint.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +11,7 @@ async function bootstrap() {
   app.useGlobalGuards(new AuthGuard('main'));
   app.useGlobalInterceptors(new LoggerInterceptor('main'));
   app.useGlobalPipes(new CustomValidationPipe('main'));
-  app.useGlobalFilters(new LogAllExceptionsFilter('main'));
+  app.useGlobalFilters(new DeprecatedEndpointFilter('main'));
 
   await app.listen(3001);
 }

@@ -8,7 +8,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     this.logger.debug(
-      `Middleware app -- Received request from agent ${req.headers['user-agent']}`,
+      `Middleware -- Received request from agent ${req.headers['user-agent']}`,
     );
 
     next();
